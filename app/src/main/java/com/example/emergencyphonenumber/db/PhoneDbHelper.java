@@ -12,13 +12,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class PhoneDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "phone.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
-    private static final String TABLE_NAME = "phone_number";
-    private static final String COL_ID = "_id";
-    private static final String COL_TITLE = "title";
-    private static final String COL_NUMBER = "number";
-    private static final String COL_PICTURE = "picture";
+    public static final String TABLE_NAME = "phone_number";
+    public static final String COL_ID = "_id";
+    public static final String COL_TITLE = "title";
+    public static final String COL_NUMBER = "number";
+    public static final String COL_PICTURE = "picture";
 
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
             + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
