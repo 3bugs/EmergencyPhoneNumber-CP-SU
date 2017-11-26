@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class PhoneDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "phone.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 8;
 
     public static final String TABLE_NAME = "phone_number";
     public static final String COL_ID = "_id";
@@ -48,12 +48,11 @@ public class PhoneDbHelper extends SQLiteOpenHelper {
         cv.put(COL_NUMBER, "199");
         cv.put(COL_PICTURE, "number0002.jpg");
         db.insert(TABLE_NAME, null, cv);
-
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(db);
     }
 }
