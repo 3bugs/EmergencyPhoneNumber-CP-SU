@@ -1,12 +1,16 @@
 package com.example.emergencyphonenumber;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.emergencyphonenumber.adapter.PhoneListAdapter;
 import com.example.emergencyphonenumber.db.PhoneDbHelper;
 import com.example.emergencyphonenumber.model.PhoneItem;
 
@@ -30,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = mDb.query(
                 PhoneDbHelper.TABLE_NAME,
                 null,
-                null,
+                "category=1",
                 null,
                 null,
                 null,
@@ -47,13 +51,25 @@ public class MainActivity extends AppCompatActivity {
             mPhoneItemList.add(item);
         }
 
-        ArrayAdapter adapter = new ArrayAdapter<>(
+        PhoneListAdapter adapter = new PhoneListAdapter(
                 this,
-                android.R.layout.simple_list_item_1,
+                R.layout.item,
                 mPhoneItemList
         );
 
         ListView lv = findViewById(R.id.list_view);
         lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                PhoneItem item = mPhoneItemList.get(position);
+                String phoneNumber = item.number;
+
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(intent);
+            }
+        });
     }
 }
