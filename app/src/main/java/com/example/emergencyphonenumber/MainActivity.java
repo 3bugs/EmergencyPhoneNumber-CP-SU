@@ -1,16 +1,17 @@
 package com.example.emergencyphonenumber;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.emergencyphonenumber.adapter.PhoneListAdapter;
@@ -58,36 +59,73 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button insertButon = findViewById(R.id.insert_button);
-        insertButon.setOnClickListener(new View.OnClickListener() {
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long l) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+
+                String[] items = new String[]{"แก้ไขข้อมูล", "ลบข้อมูล"};
+
+                dialog.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (i == 0) { // แก้ไขข้อมูล
+                            PhoneItem item = mPhoneItemList.get(position);
+                            int phoneId = item.id;
+
+                            ContentValues cv = new ContentValues();
+                            cv.put(PhoneDbHelper.COL_NUMBER, "12345");
+
+                            mDb.update(
+                                    PhoneDbHelper.TABLE_NAME,
+                                    cv,
+                                    PhoneDbHelper.COL_ID + "=?",
+                                    new String[]{String.valueOf(phoneId)}
+                            );
+                            loadDataFromDb();
+                            mAdapter.notifyDataSetChanged();
+
+                        } else if (i == 1) { // ลบข้อมูล
+                            PhoneItem item = mPhoneItemList.get(position);
+                            int phoneId = item.id;
+
+                            mDb.delete(
+                                    PhoneDbHelper.TABLE_NAME,
+                                    PhoneDbHelper.COL_ID + "=?",
+                                    new String[]{String.valueOf(phoneId)}
+                            );
+                            loadDataFromDb();
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+                dialog.show();
+                return true;
+            }
+        });
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText phoneTitleEditText = findViewById(R.id.phone_title_edit_text);
-                EditText phoneNumberEditText = findViewById(R.id.phone_number_edit_text);
-
-                // todo: เพิ่มการตรวจสอบ input
-
-                String phoneTitle = phoneTitleEditText.getText().toString();
-                String phoneNumber = phoneNumberEditText.getText().toString();
-
-                ContentValues cv = new ContentValues();
-                cv.put(PhoneDbHelper.COL_TITLE, phoneTitle);
-                cv.put(PhoneDbHelper.COL_NUMBER, phoneNumber);
-                cv.put(PhoneDbHelper.COL_PICTURE, "ic_launcher.png");
-
-                mDb.insert(PhoneDbHelper.TABLE_NAME, null, cv);
-                loadDataFromDb();
-                mAdapter.notifyDataSetChanged();
-
-                mDb.delete(
-                        PhoneDbHelper.TABLE_NAME,
-                        "title=? AND number=?",
-                        new String[]{"แจ้งเหตุด่วนเหตุร้าย", "199"}
-                );
+                Intent intent = new Intent(MainActivity.this, AddPhoneActivity.class);
+                startActivityForResult(intent, 123);
             }
         });
 
     } // ปิดเมธอด onCreate
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 123) {
+            if (resultCode == RESULT_OK) {
+                loadDataFromDb();
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     private void loadDataFromDb() {
         Cursor cursor = mDb.query(

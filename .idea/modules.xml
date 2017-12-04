@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EmergencyPhoneNumber.iml" filepath="$PROJECT_DIR$/EmergencyPhoneNumber.iml" />
+      <module fileurl="file://C:\Users\Promlert\AndroidStudioProjects\EmergencyPhoneNumber-CP-SU\EmergencyPhoneNumber.iml" filepath="C:\Users\Promlert\AndroidStudioProjects\EmergencyPhoneNumber-CP-SU\EmergencyPhoneNumber.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EmergencyPhoneNumber-CP-SU.iml" filepath="$PROJECT_DIR$/EmergencyPhoneNumber-CP-SU.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

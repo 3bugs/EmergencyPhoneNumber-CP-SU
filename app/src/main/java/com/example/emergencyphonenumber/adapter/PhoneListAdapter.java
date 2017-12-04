@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.emergencyphonenumber.R;
 import com.example.emergencyphonenumber.model.PhoneItem;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -62,6 +63,10 @@ public class PhoneListAdapter extends ArrayAdapter<PhoneItem> {
 
         } catch (IOException e) {
             e.printStackTrace();
+
+            File pictureFile = new File(mContext.getFilesDir(), pictureFileName);
+            Drawable drawable = Drawable.createFromPath(pictureFile.getAbsolutePath());
+            phoneImageView.setImageDrawable(drawable);
         }
 
         return itemLayout;
